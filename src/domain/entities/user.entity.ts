@@ -1,15 +1,12 @@
 import { z } from "zod";
+import { CustomError } from "../errors/custom.error";
+
+type UserEntityProps = z.infer<typeof UserEntity.schema>;
 
 export class UserEntity {
 
    constructor(
-    public _id: string,
-    public name: string,
-    public email: string,
-    public password: string,
-    public role: string[],
-    public img?: string,
-    public emailValidated?: boolean,
+    public readonly properties: UserEntityProps
    ){}
 
    public static schema = z.object({
@@ -29,12 +26,9 @@ export class UserEntity {
     const result = this.schema.safeParse(object);
 
     if( !result.success ){
-      throw (`${ result.error.errors[0].message}`)
+      throw CustomError.badRequest(`${ result.error.errors[0].message}`)
     }
-
-    const {_id,email,emailValidated,img,name,password,role} = result.data;
-
-    // return new UserEntity(_id, name, email, emailValidated,password,role,img);
+    return new UserEntity(result.data);
    }
    
 };
