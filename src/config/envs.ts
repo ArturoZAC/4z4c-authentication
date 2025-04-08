@@ -5,6 +5,12 @@ const envsSchema = z.object({
   PORT: z.string({message: 'PORT is required'})
   .transform(Number)
   .refine( val => val > 0, {message: 'PORT is cannot be empty'}),
+  MONGO_INITDB_ROOT_USERNAME: z.string({message: 'It is required'})
+  .nonempty(),
+  MONGO_INITDB_ROOT_PASSWORD: z.string({message: 'It is required'})
+  .nonempty(),
+  URL: z.string().nonempty(),
+  DBNAME: z.string().nonempty(),
 })
 
 export const envs = envsSchema.parse(process.env);

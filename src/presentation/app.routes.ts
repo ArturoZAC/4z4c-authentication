@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { HelloRoutes } from "./hello/hello.route";
+import { AuthRoute } from "./auth/auth.route";
 
 export class AppRoutes {
 
@@ -7,7 +7,10 @@ export class AppRoutes {
 
     const router = Router();
 
-    router.use('/api/hello', HelloRoutes.routes() )
+    router.use('/api/auth', AuthRoute.route() )
+
+
+
     return router;
   }
 
