@@ -1,17 +1,13 @@
 import { z } from "zod";
 
-export class RegisterUserDto {
+export class LoginUserDto {
 
   private constructor(
-    public name: string,
     public email: string,
     public password: string,
   ){}
 
   public static schema = z.object({
-    name: z
-      .string( {message: "name is required"})
-      .min(1, {message: "name is required"}),
     email: z
       .string({ message: 'Email is required' })
       .min(1, { message: 'Email is required' })
@@ -22,7 +18,7 @@ export class RegisterUserDto {
       .min(6, { message: 'Password too short' })
   });
 
-  public static create(object: z.infer< typeof this.schema> ): [string?, RegisterUserDto?] {
+  public static create(object: z.infer< typeof this.schema> ): [string?, LoginUserDto?] {
 
     const result = this.schema.safeParse(object);
 
@@ -34,8 +30,8 @@ export class RegisterUserDto {
       return [ customMessage, undefined ]
     }
 
-    const {name, email, password} = result.data;
-    return [undefined, new RegisterUserDto(name, email, password)]
+    const {email, password} = result.data;
+    return [undefined, new LoginUserDto(email, password)]
   }
 
 };

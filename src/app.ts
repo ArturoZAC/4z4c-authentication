@@ -1,4 +1,4 @@
-import { envs } from "./config/envs";
+import { envs } from "./config";
 import { MongoDatabase } from "./data";
 import { AppRoutes } from "./presentation/app.routes";
 import { AppServer } from "./presentation/app.server";

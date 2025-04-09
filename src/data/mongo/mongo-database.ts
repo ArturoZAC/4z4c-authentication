@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { envs } from "../../config/envs";
+import { envs } from "../../config";
 
 export class MongoDatabase {
 

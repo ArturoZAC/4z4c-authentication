@@ -1,18 +1,39 @@
 import { Request, Response } from "express";
-import { RegisterUserDto } from "../../domain";
+import { CustomError, LoginUserDto, RegisterUserDto } from "../../domain";
+import { AuthService } from "../services/auth.service";
 
 export class AuthController {
 
-  public constructor(){}
+  public constructor(
+    public readonly authService: AuthService,
+  ){}
 
-  public registerUser (req: Request, res: Response) {
-    const registerDto = RegisterUserDto.create( req.body );
+  private handleError = ( error: unknown, res: Response) => {
+    if( error instanceof CustomError ){
+      return res.status(error.statusCode).json({ error: error.message })
+    }
 
-    res.json(registerDto);
+    return res.status(500).json({error: 'Internal server error'});
   }
 
-  public loginUser (req: Request, res: Response) {
-    res.json({message: 'loginUser'})
+  public registerUser = (req: Request, res: Response) => {
+
+    const [ error, registerDto ] = RegisterUserDto.create( req.body );
+    if ( error ) return res.status(400).json({error})
+
+    this.authService.registerUser( registerDto! )
+      .then( (user) => res.json( user ))
+      .catch( ( error ) => this.handleError(error, res))
+  }
+
+  public loginUser = (req: Request, res: Response) => {
+    const [ error, loginDto ] = LoginUserDto.create( req.body );
+    
+    if ( error ) return res.status(400).json({error})
+
+    this.authService.loginUser( loginDto! )
+      .then( (user) => res.json( user ))
+      .catch( ( error ) => this.handleError(error, res))
   }
   
   public validateEmail (req: Request, res: Response) {

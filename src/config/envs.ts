@@ -11,6 +11,12 @@ const envsSchema = z.object({
   .nonempty(),
   URL: z.string().nonempty(),
   DBNAME: z.string().nonempty(),
+  JWT_SEED: z
+    .string({message: 'JWT_SEED is requried'})
+    .nonempty(),
+  MAILER_SERVICE: z.string({message: 'MAILER_SERVICE is requried'}).nonempty(),
+  MAILER_EMAIL: z.string({message: 'MAILER_EMAIL is requried'}).nonempty(),
+  MAILER_SECRET_KEY: z.string({message: 'MAILER_SECRET_KEY is requried'}).nonempty()
 })
 
 export const envs = envsSchema.parse(process.env);
