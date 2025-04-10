@@ -11,8 +11,16 @@ export const JwtAdapter = {
         return resolve(token)
       })     
     })
+  },
+
+  validatedToken: ( token: string ) => {
+    return new Promise (( resolve, reject ) => {
+      jwt.verify( token, envs.JWT_SEED, (err, decoded) => {
+        if( err ) return reject(null);
+
+        resolve(decoded);
+      })
+    })
   }
-
-
 
 }
