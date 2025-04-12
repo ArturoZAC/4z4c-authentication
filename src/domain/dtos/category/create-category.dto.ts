@@ -1,9 +1,10 @@
 import { z } from "zod";
 
 export class CreateCategoryDto {
+
   private constructor(
     public readonly name: string,
-    public readonly available: boolean,
+    public readonly available?: boolean,
   ){}
 
   public static schema = z.object({
@@ -20,10 +21,20 @@ export class CreateCategoryDto {
       .optional(),
   })
 
-  public static create = ( object: z.infer< typeof this.schema> ) => {
+  public static create = ( object: z.infer< typeof this.schema> ): [ string?, CreateCategoryDto?] => {
 
     const result = this.schema.safeParse(object);
 
+    if( !result.success ){
+      const customError = result.error.errors[0].message === 'Required'
+                          ? 'name is required'
+                          : result.error.errors[0].message
+      return [ customError , undefined ];
+    }
+
+    const {name, available} = result.data;
+
+    return [ undefined, new CreateCategoryDto(name, available) ];
   }
 
 
