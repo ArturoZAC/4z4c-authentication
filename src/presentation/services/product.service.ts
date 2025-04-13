@@ -32,6 +32,8 @@ export class ProductService {
       const products = await ProductModel.find()
         .skip( (page - 1) * limit)
         .limit( limit )
+        .populate('user')
+        .populate('category')
 
       return {
         page: page,

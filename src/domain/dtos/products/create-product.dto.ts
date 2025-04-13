@@ -1,4 +1,5 @@
 import { z } from "zod"
+import { ObjectId } from "../../../config/adapters/objectId";
 
 export class CreateProductDto {
 
@@ -7,8 +8,8 @@ export class CreateProductDto {
     public readonly available: boolean,
     public readonly price: number,
     public readonly description: string,
-    public readonly user: string, //ID
     public readonly category: string, //ID
+    public readonly user: string, //ID
   ){}
 
   public static schema = z.object({
@@ -18,12 +19,18 @@ export class CreateProductDto {
         invalid_type_error: 'name must be a string',
       })
       .nonempty('name cannot be empty'),
-    user: z
-      .string({message: 'user is required'})
-      .nonempty('user cannot be empty'),
     category: z
       .string({ message: 'category is required'})
-      .nonempty('category cannot be empty'),
+      .nonempty('category cannot be empty')
+      .refine( value => {
+        return ObjectId.isMongoID( value )
+      }, { message: 'category must be a valid ID' }),
+    user: z
+      .string({message: 'user is required'})
+      .nonempty('user cannot be empty')
+      .refine( value => {
+        return ObjectId.isMongoID( value )
+      }, { message: 'user must be a valid ID' }),
 
     available: z.boolean().optional().default(false),
     price: z.number().optional().default(0),
@@ -42,9 +49,9 @@ export class CreateProductDto {
       return [ customMessage, undefined ];
     }
 
-    const { name,available, price, description, user, category } = result.data;
+    const { name,available, price, description, category, user } = result.data;
 
-    return [undefined, new CreateProductDto(name , available, price, description, user, category)];
+    return [undefined, new CreateProductDto(name , available, price, description, category, user)];
   } 
 
 };
