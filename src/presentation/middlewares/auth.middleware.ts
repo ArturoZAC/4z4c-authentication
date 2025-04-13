@@ -31,7 +31,7 @@ export class AuthMiddleware {
         img: user.img ?? null,
       };
 
-      req.body.user = UserEntity.fromObject( userWith_Id! );
+      (req as any).user = UserEntity.fromObject( userWith_Id! );
 
       next();
     } catch (error) {

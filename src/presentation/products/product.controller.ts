@@ -1,13 +1,14 @@
 import { Request, Response } from "express";
-import { CreateCategoryDto, CustomError } from "../../domain";
-import { CategoryService } from "../services/category.service";
+import { CustomError } from "../../domain";
 import { PaginationDto } from "../../domain/dtos/shared/pagination.dto";
+import { ProductService } from "../services/product.service";
+import { CreateProductDto } from "../../domain/dtos/products/create-product.dto";
 
 
-export class CategoryController {
+export class ProductController {
 
   constructor(
-    private readonly categoryService: CategoryService
+    private readonly productService: ProductService
   ){}
 
   private handleError = ( error: unknown, res: Response) => {
@@ -18,23 +19,23 @@ export class CategoryController {
     return res.status(500).json({error: 'Internal server error'});
   }
 
-  public createCategory = async(req: Request, res: Response) => {
+  public createProduct = async(req: Request, res: Response) => {
 
-    const [error, createCategoryDto] = CreateCategoryDto.create(req.body);
+    const [error, createProductDto] = CreateProductDto.create(req.body);
     if( error ) return res.status(400).json({ error });
 
-    this.categoryService.createCategory(createCategoryDto!, (req as any).user)
+    this.productService.createProduct(createProductDto!)
       .then( category => res.status(201).json(category) )
       .catch( error => this.handleError(error, res) )
   }
 
-  public getCategories = async(req: Request, res: Response) => {
+  public getProducts = async(req: Request, res: Response) => {
 
     const { page = 1, limit = 10 } = req.query;
     const [ error, paginationDto] = PaginationDto.create({ page: +page, limit: +limit });	
     if( error ) return res.status(400).json({ error });
 
-    this.categoryService.getCategories( paginationDto! )
+    this.productService.getproducts( paginationDto! )
       .then( categories => res.status(200).json(categories) )
       .catch( error => this.handleError(error, res) )
    }
