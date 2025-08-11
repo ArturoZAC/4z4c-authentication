@@ -76,6 +76,7 @@ export class AuthService {
   }
 
   private sendEmailValidationLink = async( email: string ) => {
+
     const token = await JwtAdapter.generateToken({ email: email })
     if ( !token ) throw CustomError.internalServer('Error while creating JWT')
 
@@ -96,10 +97,10 @@ export class AuthService {
     if ( !isSend ) throw CustomError.internalServer('Error Sending email');
 
     return true;
+
   }
 
   public validateEmailService = async(token:string) => {
-
     const payload = await JwtAdapter.validatedToken(token);
     if ( !payload ) throw CustomError.unAuthorized('Invalid token');
 

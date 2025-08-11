@@ -1,8 +1,6 @@
 import { z } from "zod";
 import { CustomError } from "../errors/custom.error";
 
-type UserEntityProps = z.infer<typeof UserEntity.schema>;
-
 export class UserEntity {
 
   constructor(

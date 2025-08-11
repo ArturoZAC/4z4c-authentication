@@ -57,7 +57,5 @@ export class CategoryService {
     } catch (error) {
       throw CustomError.internalServer('Internal Server Error');
     }
-
   }
-
 }

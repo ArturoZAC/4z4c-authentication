@@ -27,13 +27,14 @@ export class AuthController {
   }
 
   public loginUser = (req: Request, res: Response) => {
+
     const [ error, loginDto ] = LoginUserDto.create( req.body );
-    
     if ( error ) return res.status(400).json({error})
 
     this.authService.loginUser( loginDto! )
       .then( (user) => res.json( user ))
       .catch( ( error ) => this.handleError(error, res))
+      
   }
   
   public validateEmail = (req: Request, res: Response) => {
